@@ -2,10 +2,11 @@
 <html lang="en">
     <head>
         <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width">
-            <title></title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>3D Campus Mapping</title>
 
         <!--put your external stylesheet links here-->
+        <link href="https://api.mapbox.com/mapbox-gl-js/v3.8.0/mapbox-gl.css" rel="stylesheet" />
         <link rel="stylesheet" href="css/style.css">
         <!--[if IE<9]>
             <link rel="stylesheet" href="css/style.ie.css">
@@ -13,34 +14,31 @@
 
          <!--you can also place internal styles here;
              place these within <style> tags-->
-        <style>
-            #mydiv {
-                background-color: red;
-                width: 80%;
-                margin: 0 auto;
-                height: 100px;
-            }
-        </style>
+        <style></style>
         
     </head>
 
     <body>
-        <!--put your initial page content here-->
-        <div id="mydiv">
-            Hello World! I am woring on this assignment!
-        </div>
 
+        <div id="map"></div>
         <!--you can also use this space for internal scripts;
         place these within <script> tags-->
         <script>
-            var mydiv = document.getElementById("mydiv");
-            mydiv.addEventListener("click", function(){
-                alert("Hello World!");
-        });
+
         </script>
 
         <!--put your external script links here-->
-        <script type="text/javascript" src="js/main.js"></script>
+
+        <script src="https://api.mapbox.com/mapbox-gl-js/v3.8.0/mapbox-gl.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/three@0.136.0/build/three.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/three@0.136.0/examples/js/loaders/GLTFLoader.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/three@0.136.0/examples/js/controls/OrbitControls.js"></script>
+        <script type="text/javascript" src="js/main_test.js"></script>
     </body>
 
 </html>
+
+
+
+
+

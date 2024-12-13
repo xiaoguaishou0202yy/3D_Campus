@@ -1,1 +1,5 @@
 /* Stylesheet by Zhiyi Li, 2024 */
+#map {
+    width: 100%;
+    height: 100vh; /* Or another fixed height */
+}
