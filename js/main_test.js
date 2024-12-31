@@ -1,53 +1,73 @@
-// 创建场景
-const scene = new THREE.Scene();
 
-// 添加相机
-const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-camera.position.set(0, 5, 10); // 初始相机位置
+let scene, camera, renderer;
 
-// 创建渲染器
-const renderer = new THREE.WebGLRenderer();
-renderer.setSize(window.innerWidth, window.innerHeight);
-document.body.appendChild(renderer.domElement);
+const init = () => {
+    //Scene
+    scene = new THREE.Scene();
+    scene.background = new THREE.Color(0x000000);
 
-// 添加光照
-const light = new THREE.DirectionalLight(0xffffff, 1);
-light.position.set(10, 10, 10);
-scene.add(light);
+    //Renderer
+    renderer = new THREE.WebGLRenderer({ antialias: true});
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    document.body.appendChild(renderer.domElement);
 
-const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
-scene.add(ambientLight);
+    //Camera
+    const aspect = window.innerWidth / window.innerHeight;
+    camera = new THREE.PerspectiveCamera(60, aspect, 0.01, 500);
+    camera.rotation.y = (90/180) * Math.PI;
+    camera.position.set(0.5,0,0);
 
-// 添加辅助工具
-const axesHelper = new THREE.AxesHelper(5);
-scene.add(axesHelper);
+    //Camera Controls
+    const controls = new THREE.OrbitControls(camera, renderer.domElement);
+    controls.addEventListener("change", () => {
+        renderer.render(scene, camera);
+    });
 
-const gridHelper = new THREE.GridHelper(10, 10);
-scene.add(gridHelper);
+    //Light
+    ambientLight = new THREE.AmbientLight(0xaaaaaa, 20);
+    scene.add(ambientLight);
 
-// 加载 GLB 模型
-const loader = new THREE.GLTFLoader();
-loader.load(
-    'data/campusbuildings.glb',
-    (gltf) => {
+    //Loader
+    const loader = new THREE.GLTFLoader();
+    loader.load("data/campusbuildings.gltf", (gltf) => {
         const model = gltf.scene;
-        model.position.set(0, 0, 0); // 设置位置
-        model.scale.set(10, 10, 10); // 调整比例
         scene.add(model);
-    },
-    undefined,
-    (error) => console.error('Error loading model:', error)
-);
+      
+        // 1. Compute bounding box of the entire model
+        const box = new THREE.Box3().setFromObject(model);
+        
+        // 2. Get the center and size of that bounding box
+        const center = box.getCenter(new THREE.Vector3());
+        const size = box.getSize(new THREE.Vector3());
+        
+        // 3. Optionally re-center the model at (0,0,0)
+        //    (sometimes models load very far from the origin)
+        model.position.x += (model.position.x - center.x);
+        model.position.y += (model.position.y - center.y);
+        model.position.z += (model.position.z - center.z);
+        
+        // 4. Move the camera so it “frames” the model.
+        //    A simple approach: place it a bit above and away in Z:
+        const maxDim = Math.max(size.x, size.y, size.z);
+        const fov = camera.fov * (Math.PI / 180);
+        let cameraZ = Math.abs(maxDim / 2 / Math.tan(fov / 2));
+        cameraZ *= 1.5; // push back just a bit
+        camera.position.set(0, maxDim * 0.5, cameraZ);
+        
+        // 5. Make OrbitControls look at the model’s center
+        controls.target.set(0, 0, 0);
+        controls.update();
+        
+        animate();
+      });
+      
 
-// 添加 OrbitControls
-const controls = new THREE.OrbitControls(camera, renderer.domElement);
-controls.update();
-
-// 动画循环
-const animate = () => {
-    requestAnimationFrame(animate);
-    controls.update();
-    renderer.render(scene, camera);
 };
-animate();
 
+//Recursive Loop for Render Scene
+const animate = () => {
+    renderer.render(scene, camera);
+    requestAnimationFrame(animate);
+}
+
+init();
