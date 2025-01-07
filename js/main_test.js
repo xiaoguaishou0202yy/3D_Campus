@@ -1,65 +1,3 @@
-/* 
-let scene, camera, renderer;
-
-const init = () => {
-    //Scene
-    scene = new THREE.Scene();
-    scene.background = new THREE.Color(0x000000);
-
-    //Renderer
-    renderer = new THREE.WebGLRenderer({ antialias: true});
-    renderer.setSize(window.innerWidth, window.innerHeight);
-    document.body.appendChild(renderer.domElement);
-
-    //Camera
-    const aspect = window.innerWidth / window.innerHeight;
-    camera = new THREE.PerspectiveCamera(60, aspect, 0.01, 500);
-    camera.rotation.y = (90/180) * Math.PI;
-    camera.position.set(0.5,0,0);
-
-    //Camera Controls
-    const controls = new THREE.OrbitControls(camera, renderer.domElement);
-    controls.addEventListener("change", () => {
-        renderer.render(scene, camera);
-    });
-
-    //Light
-    ambientLight = new THREE.AmbientLight(0xffffff, 20);
-    scene.add(ambientLight);
-
-    //Loader
-    const loader = new THREE.GLTFLoader();
-    loader.load("data/campusbuildings.gltf", (gltf) => {
-        const model = gltf.scene;
-        scene.add(model);
-        
-        // Example: force a moderate uniform scale
-        model.scale.set(0.01, 0.01, 0.01);
-        
-        // Check bounding box to see if it’s huge or tiny
-        const box = new THREE.Box3().setFromObject(model);
-        console.log("Bounds:", box.min, box.max);
-        console.log("Size:", box.getSize(new THREE.Vector3()));
-      
-        // Then force the camera to look at (0,0,0)
-        controls.target.set(0, 0, 0);
-        controls.update();
-      
-        renderer.render(scene, camera);
-    });
-      
-
-};
-
-//Recursive Loop for Render Scene
-const animate = () => {
-    renderer.render(scene, camera);
-    requestAnimationFrame(animate);
-}
-
-init(); */
-
-
 let scene, camera, renderer, controls;
 
 const init = () => {
@@ -68,24 +6,25 @@ const init = () => {
     scene.background = new THREE.Color(0x87ceeb); // Light blue sky background
 
     // Renderer
-    renderer = new THREE.WebGLRenderer({ antialias: true });
-    renderer.setSize(window.innerWidth, window.innerHeight);
-    renderer.shadowMap.enabled = true;
+    // Create WebGL renderer with antialiasing for smoother edges
+    renderer = new THREE.WebGLRenderer({ antialias: true }); 
+    renderer.setSize(window.innerWidth, window.innerHeight); //make renderer fill the entire window
+    renderer.shadowMap.enabled = true; // Enable shadow mapping for realistic shadows
     document.body.appendChild(renderer.domElement);
 
-    // Camera
+    // Camera Setup
     const aspect = window.innerWidth / window.innerHeight;
-    camera = new THREE.PerspectiveCamera(60, aspect, 0.1, 50000);
-    camera.position.set(12800, 50, -48000); // Position based on your model bounds
+    camera = new THREE.PerspectiveCamera(60, aspect, 0.1, 50000); // - Near plane of 0.1 and far plane of 50000 to accommodate large models
+    camera.position.set(2800, 600, -40000); // Position based on your model bounds
     
     // Camera Controls
     controls = new THREE.OrbitControls(camera, renderer.domElement);
     controls.enableDamping = true; // Smooth camera movements
-    controls.dampingFactor = 0.05;
-    controls.screenSpacePanning = false;
-    controls.minDistance = 100;
-    controls.maxDistance = 50000;
-    controls.maxPolarAngle = Math.PI / 2;
+    controls.dampingFactor = 0.05;// Control the smoothing amount
+    controls.screenSpacePanning = false;// Disable vertical panning
+    controls.minDistance = 100;// Prevent zooming too close
+    controls.maxDistance = 50000;// Prevent zooming too far
+    controls.maxPolarAngle = Math.PI / 2;// Prevent camera going below ground
 
     // Lighting
     const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
