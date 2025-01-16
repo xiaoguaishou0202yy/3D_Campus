@@ -1,7 +1,3 @@
-
-
-
-
 let scene, camera, renderer, controls;
 
 const init = () => {
@@ -52,40 +48,6 @@ const init = () => {
         model.position.x -= center.x;
         model.position.z -= center.z;
         // Keep y (vertical) position as is since we probably want buildings on the ground
-
-
-        console.log('Full GLTF data:', gltf);
-    
-        // Detailed mesh inspection
-        model.traverse((child) => {
-            if (child.isMesh) {
-                console.log('------------------------');
-                console.log('Mesh found:');
-                console.log('Name:', child.name);
-                console.log('UUID:', child.uuid);
-                console.log('Type:', child.type);
-                console.log('Position:', child.position);
-                console.log('Parent name:', child.parent?.name);
-                
-                // Log material information
-                if (child.material) {
-                    console.log('Material:', child.material.name);
-                    console.log('Material type:', child.material.type);
-                }
-                
-                // Log geometry information
-                if (child.geometry) {
-                    console.log('Vertices count:', child.geometry.attributes.position.count);
-                }
-            }
-        });
-    
-        // Count total meshes
-        let meshCount = 0;
-        model.traverse((child) => {
-            if (child.isMesh) meshCount++;
-        });
-        console.log('Total number of meshes:', meshCount);
         
         scene.add(model);
         
@@ -132,5 +94,3 @@ const animate = () => {
 
 init();
 animate();
-
-

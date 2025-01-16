@@ -32,7 +32,7 @@ body {
 
 /* Info panel styles */
 .info-panel {
-    width: 400px;
+    width: 280px;
     height: 40vh; /* Full viewport height */
     background-color: white;
     box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
